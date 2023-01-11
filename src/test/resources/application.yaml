@@ -1,0 +1,22 @@
+spring:
+  # 참고로 별다른 설정 없으면 그냥 메모리 모드로 돌림
+  # 그래서 테스트용으로 변경한 이 모든 세팅 없어도 됨
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/actualjpa1
+#    url: jdbc:h2:mem:test
+    username: sa
+    password: 12
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+#        show_sql: true
+        format_sql: true
+  thymeleaf:
+    cache: false
+logging:
+  level:
+    org.hibernate.SQL: debug
