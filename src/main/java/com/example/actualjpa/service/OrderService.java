@@ -4,9 +4,12 @@ import com.example.actualjpa.domain.*;
 import com.example.actualjpa.repository.ItemRepository;
 import com.example.actualjpa.repository.MemberRepository;
 import com.example.actualjpa.repository.OrderRepository;
+import com.example.actualjpa.repository.model.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /*
  비즈니스 로직이 엔티티 쪽에 있는 것을 도메인 모델 패턴 이라고 한다
@@ -74,7 +77,8 @@ public class OrderService {
     }
 
     // 검색
-    /*
-    public List<Order> findOrders(){}
-     */
+    public List<Order> findOrders(OrderSearch orderSearch) {
+
+        return orderRepository.findAll(orderSearch);
+    }
 }

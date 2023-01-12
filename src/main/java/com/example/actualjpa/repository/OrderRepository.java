@@ -1,7 +1,10 @@
 package com.example.actualjpa.repository;
 
 import com.example.actualjpa.domain.Order;
+import com.example.actualjpa.domain.QMember;
+import com.example.actualjpa.domain.QOrder;
 import com.example.actualjpa.repository.model.OrderSearch;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderRepository {
 
+    private final JPAQueryFactory queryFactory;
     private final EntityManager em;
 
     public void save(Order order) {
@@ -41,11 +45,11 @@ public class OrderRepository {
         String jpql = "select o from Order o join o.member m";
         boolean isFirstCondition = true;
 
-        if (orderSearch.getOrderStatus() != null) {
+        if (orderSearch.getStatus() != null) {
             if (isFirstCondition) {
                 jpql += " where";
                 isFirstCondition = false;
-            }else{
+            } else {
                 jpql += " and";
             }
             jpql += " o.status = :status";
@@ -65,6 +69,7 @@ public class OrderRepository {
 
     // 2번 방법 역시 권장하지 않는 방법 .실무에서 쓰라는 방법은 아닌듯. 근데 ㅈㄴ 신기한건 JPA 권장 방법. (표준 SPEC)
     // 몰라 ㅅ발
+
     /**
      * JPA Criteria 로 해결한다
      */
@@ -74,5 +79,22 @@ public class OrderRepository {
     }
 
     // 동적쿼리 권장 방법 > Query DSL 쓰셈요 ~!
+    public List<Order> findAllByQDSL(OrderSearch orderSearch) {
 
+
+        /*
+         Query : select * from order o
+                     join member m
+                     on o.member_id = m.member_id
+                     where o.orderStatus = {} and m.username = {};
+         */
+
+        return queryFactory.selectFrom(QOrder.order)
+                .join(QMember.member)
+                .on(QOrder.order.member.id.eq(QMember.member.id))
+                .where(QOrder.order.status.eq(orderSearch.getStatus())
+                        , QMember.member.name.eq(orderSearch.getMemberName()))
+                .fetch()
+                ;
+    }
 }
