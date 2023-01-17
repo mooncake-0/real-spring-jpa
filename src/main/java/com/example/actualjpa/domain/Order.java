@@ -23,8 +23,10 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    // CACADE 를 지정해주는 곳 :: 내가 들어가게 되면, 영컨에 없어도 나랑 연관된 얘네들까진 다 넣겠다.
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
+
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id") // 로직상 여기서 Delivery 를 조회하는게 맞기 때문에 연관주임

@@ -1,16 +1,20 @@
 package com.example.actualjpa.repository;
 
 import com.example.actualjpa.domain.Order;
+import com.example.actualjpa.domain.OrderStatus;
 import com.example.actualjpa.domain.QMember;
 import com.example.actualjpa.domain.QOrder;
 import com.example.actualjpa.repository.model.OrderSearch;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
@@ -92,9 +96,23 @@ public class OrderRepository {
         return queryFactory.selectFrom(QOrder.order)
                 .join(QMember.member)
                 .on(QOrder.order.member.id.eq(QMember.member.id))
-                .where(QOrder.order.status.eq(orderSearch.getStatus())
-                        , QMember.member.name.eq(orderSearch.getMemberName()))
+                .where(eqStatus(orderSearch.getStatus())
+                        , eqName(orderSearch.getMemberName()))
                 .fetch()
                 ;
+    }
+
+    private BooleanExpression eqStatus(OrderStatus orderStatus) {
+        if (Objects.isNull(orderStatus)) {
+            return null;
+        }
+        return QOrder.order.status.eq(orderStatus);
+    }
+
+    private BooleanExpression eqName(String name) {
+        if (!StringUtils.hasText(name)) {
+            return null;
+        }
+        return QMember.member.name.eq(name);
     }
 }

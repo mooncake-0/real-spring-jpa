@@ -40,6 +40,10 @@ dependencies {
 	// QueryDsl 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+	//
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
+
 }
 
 tasks.named('test') {

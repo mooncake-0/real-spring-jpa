@@ -53,5 +53,12 @@ public class MemberService {
         }
     }
 
+    @Transactional
+    public Long updateMemberName(Long memberId, String memberName) {
+        Member findMember = memberRepository.findOne(memberId);
+        findMember.setName(memberName);
+        return findMember.getId();
+    }
+
 }
 
