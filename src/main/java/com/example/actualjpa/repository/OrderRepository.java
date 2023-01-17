@@ -4,6 +4,7 @@ import com.example.actualjpa.domain.Order;
 import com.example.actualjpa.domain.OrderStatus;
 import com.example.actualjpa.domain.QMember;
 import com.example.actualjpa.domain.QOrder;
+import com.example.actualjpa.model.query.QuerySimpleOrderDto;
 import com.example.actualjpa.repository.model.OrderSearch;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -100,6 +101,35 @@ public class OrderRepository {
                         , eqName(orderSearch.getMemberName()))
                 .fetch()
                 ;
+    }
+
+    public List<Order> findAllWithMemberDelivery() {
+
+//        // 차이점 확인 // 원래 쿼리는 뭘 가져올건지 select 할 수 있지만, 여기서도 할 수 있긴 하지만 일반적인 방식의 차이라고 알아두면 됨
+//        // 그냥 join 은 가져오려는 Order 로만 join  한다 (따라서 다 쿼리 나가야함 레이지라)
+////        return em.createQuery(
+////                "select o from Order o" +
+////                        " join o.member m" +
+////                        " join o.delivery d", Order.class
+////        ).getResultList();
+//
+//         Fetch Join 이 진짜 조인하는 테이블들 다 가져옴.
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+
+    }
+
+    public List<QuerySimpleOrderDto> findSimpleOrderDtos() {
+
+        // QueryDsl Projections 와 완전 동일
+        return em.createQuery("select new com.example.actualjpa.model.query.QuerySimpleOrderDto(" +
+                        "o.id, o.member.name, o.orderDate, o.status, d.address) from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d", QuerySimpleOrderDto.class)
+                .getResultList();
     }
 
     private BooleanExpression eqStatus(OrderStatus orderStatus) {

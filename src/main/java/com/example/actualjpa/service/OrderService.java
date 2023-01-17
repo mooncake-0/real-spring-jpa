@@ -1,6 +1,8 @@
 package com.example.actualjpa.service;
 
+import com.example.actualjpa.api.controller.OrderApiController;
 import com.example.actualjpa.domain.*;
+import com.example.actualjpa.model.query.QuerySimpleOrderDto;
 import com.example.actualjpa.repository.ItemRepository;
 import com.example.actualjpa.repository.MemberRepository;
 import com.example.actualjpa.repository.OrderRepository;
@@ -81,5 +83,14 @@ public class OrderService {
 
         return orderRepository.findAllByQDSL(orderSearch);
 
+    }
+
+    public List<Order> findAllWithMemberDelivery() {
+        return orderRepository.findAllWithMemberDelivery();
+    }
+
+    public List<QuerySimpleOrderDto> findSimpleOrderDtos() {
+
+        return orderRepository.findSimpleOrderDtos();
     }
 }
