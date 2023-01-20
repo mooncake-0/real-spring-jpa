@@ -132,6 +132,21 @@ public class OrderRepository {
                 .getResultList();
     }
 
+
+    public List<Order> findAllWithItem() {
+//        return em.createQuery("select  o from Order o"
+        return em.createQuery("select distinct o from Order o" // 뻥튀기 문제 해결을 위한 distinct 문
+                + " join fetch o.member m "
+                + " join fetch o.delivery d "
+                + " join fetch o.orderItems oi "
+                + " join fetch oi.item i", Order.class)
+                .setFirstResult(1)// 실행할 수 없는 것을 보여주기 위한 페이징 문법 ( 컬렉션 조회 페치 조인 + 디스팅트 시 불가)
+                .setMaxResults(100)
+                .getResultList()
+                ;
+    }
+
+
     private BooleanExpression eqStatus(OrderStatus orderStatus) {
         if (Objects.isNull(orderStatus)) {
             return null;

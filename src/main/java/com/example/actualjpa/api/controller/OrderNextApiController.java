@@ -64,6 +64,23 @@ public class OrderNextApiController {
         return collect;
     }
 
+    // 이런 연관관계를 불러오는 조인을 할 때는 "데이터 뻥튀기" 에 대해서 꼭 명심하고 있어야 한다.
+    // 이 것을 어떻게 대응할 것인지?
+    // 그래도 패치 조인을 하면, Query 가 10개 나가던 것이 1개로 튜닝을 할 수 있음. (참고로 위와 Service 단 로직은 완전히 동일한 것을 알 수 있음!)
+    @GetMapping("/api/v3/orders")
+    public List<OrdersDto> ordersV3() {
+
+        // 심지어 그냥 얘를 가지고 iter 을 해봐도 4개임
+        List<Order> allWithItem = orderRepository.findAllWithItem();
+
+        // 중요 --> 심지어 REFERENCE 까찌 똒깥음~!~! 이거는 동일한 객체로 인지한단 것이다
+        for (Order order : allWithItem) {
+            System.out.println("order = " + order);
+        }
+
+        return allWithItem.stream().map(o -> new OrdersDto(o)).collect(Collectors.toList());
+    }
+
     @Data
     static class OrdersDto {
 

@@ -58,4 +58,15 @@ public abstract class Item { // 함유 데이터가 있을 것이기 때문
 
         this.stockQuantity = restStock;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", stockQuantity=" + stockQuantity +
+//                ", categories=" + categories +
+                '}';
+    }
 }

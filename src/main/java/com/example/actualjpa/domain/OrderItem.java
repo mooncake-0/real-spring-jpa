@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "order_item")
+
 public class OrderItem {
 
     @Id
@@ -15,12 +16,10 @@ public class OrderItem {
     @Column(name = "order_item_id")
     private Long id;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
@@ -46,5 +45,16 @@ public class OrderItem {
 
     public int getTotalPrice() {
         return this.orderPrice * this.count;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", item=" + item.getId() +
+//                ", order=" + order +
+                ", orderPrice=" + orderPrice +
+                ", count=" + count +
+                '}';
     }
 }
