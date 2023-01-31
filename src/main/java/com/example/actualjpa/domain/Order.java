@@ -24,7 +24,7 @@ public class Order {
     private Member member;
 
     // CACADE 를 지정해주는 곳 :: 내가 들어가게 되면, 영컨에 없어도 나랑 연관된 얘네들까진 다 넣겠다.
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
 
